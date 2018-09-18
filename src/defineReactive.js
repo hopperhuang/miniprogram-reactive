@@ -4,17 +4,13 @@ import Dep from './Dep'
 export function getDependency (deps, keyDescription) {
   const depsType = typeof deps
   if (depsType === 'object' && !!deps && !Array.isArray(deps)) { // 是一个对象
-    const keys = keyDescription.split('.')
-    let dep = deps
-    for (let index = 0; index < keys.length; index++) {
-      const key = keys[index]
-      dep = dep[key]
-    }
+    const dep = deps[keyDescription]
     return dep
   }
 }
 
 const defineReactive = (obj) => {
+  // deps 的形式应该是 { mainkey, 'mainkey.subkey', 'mainkey.subkey.subkye' }的形式
   const dependencies = {}
   const res = {}
   res.__isReactive__ = true

@@ -107,11 +107,7 @@ describe('unit test', function () {
     })
     it('test get dependency', () => {
       const deps = {
-        a: {
-          b: {
-            c: 1
-          }
-        }
+        'a.b.c': 1
       }
       const dep = getDependency(deps, 'a.b.c')
       assert.equal(dep, 1)
