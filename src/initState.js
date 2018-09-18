@@ -18,7 +18,7 @@ export function initWatch (watchers, reactiveData, dependencies, binder) {
   if (!!watchersType && watchersType === 'object' && !Array.isArray(watchers)) { //  watch存在且是对象时才执行
     // 获取watchers的key值
     const keys = Object.keys(watchers)
-    const dep = new Dep()
+    // const dep = new Dep()
     // 生成dep实例，用于将Dep添加target和删除target
     keys.forEach(key => {
       // 判断key，在reactiveData中是否存在对应的属性, 存在则添加watcher
@@ -53,11 +53,15 @@ export function initWatch (watchers, reactiveData, dependencies, binder) {
             // define dependency
             setTimeout(() => { // 异步执行，
               // define dep
+              const deps = dependencies
+              const dep = deps[key]
               dep.addTarget(watcher)
               // get dependency
-              watcher.excute()
+              dep.pend()
               // remove dependency
               dep.removeTarget()
+              // excute
+              watcher.excute()
             })
           } else { // 延迟执行
             // 获取依赖对象库
