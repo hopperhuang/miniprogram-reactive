@@ -168,5 +168,70 @@ describe('unit test', function () {
       }
       assert.throws(iThrowError, Error, 'handler should be a function')
     })
+    it('test computed define', () => {
+      const obj = {
+        data: {
+          a: 1,
+          b: 2,
+          c: 3
+        },
+        computed: {
+          numA () {
+            return this.data.a + this.data.b
+          },
+          numB () {
+            return this.data.b + this.data.c
+          }
+        }
+      }
+      const res = init(obj)
+      assert.equal(res.data.numA, 3)
+      assert.equal(res.data.numB, 5)
+    })
+    it('test computed change', (done) => {
+      const obj = {
+        data: {
+          a: 1,
+          b: 2,
+          c: 3
+        },
+        computed: {
+          numA () {
+            return this.data.a + this.data.b
+          },
+          numB () {
+            return this.data.b + this.data.c
+          }
+        }
+      }
+      const res = init(obj)
+      res.data.a = 2
+      setTimeout(() => {
+        assert.equal(res.data.numA, 4)
+        done()
+      }, 100)
+    })
+    it('throw error when set computed props', () => {
+      const iThrowError = () => {
+        const obj = {
+          data: {
+            a: 1,
+            b: 2,
+            c: 3
+          },
+          computed: {
+            numA () {
+              return this.data.a + this.data.b
+            },
+            numB () {
+              return this.data.b + this.data.c
+            }
+          }
+        }
+        const res = init(obj)
+        res.data.numA = 2
+      }
+      assert.throws(iThrowError, Error, 'can not set value in a computed props')
+    })
   })
 })
