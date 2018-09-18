@@ -6,6 +6,7 @@ import Dep from './Dep'
 const defineReactive = (obj) => {
   const dependencies = {}
   const res = {}
+  res.__isReactive__ = true
   const keys = Object.keys(obj)
   keys.forEach((key) => {
     let value = obj[key]

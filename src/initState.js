@@ -11,6 +11,9 @@ export function initState (data) {
 }
 
 export function initWatch (watchers, reactiveData, dependencies, binder) {
+  if (!reactiveData.__isReactive__) {
+    throw new Error('watched data should be reactive')
+  }
   const watchersType = typeof watchers
   if (!!watchersType && watchersType === 'object' && !Array.isArray(watchers)) { //  watch存在且是对象时才执行
     // 获取watchers的key值
@@ -25,14 +28,16 @@ export function initWatch (watchers, reactiveData, dependencies, binder) {
         if (_type === 'function') { // type是一个function， 延迟执行，data对应的key变动时才促发watcher
           const deps = dependencies
           const dep = deps[key]
-          const watchFunc = _watch.bind(binder || null)
-          const watcher = new Watch(watchFunc)
-          // define dep
-          dep.addTarget(watcher)
-          // get dep
-          dep.pend()
-          // remove dep
-          dep.removeTarget()
+          if (dep && dep.pend) { // 确定依赖存在
+            const watchFunc = _watch.bind(binder || null)
+            const watcher = new Watch(watchFunc)
+            // define dep
+            dep.addTarget(watcher)
+            // get dep
+            dep.pend()
+            // remove dep
+            dep.removeTarget()
+          }
         } else if (_type === 'object' && !Array.isArray(_watch)) { // watcher时object的时候执行此逻辑
           // 已对象 { handler, immediate } 形式传入时执行此断逻辑
           const { handler } = _watch
@@ -59,13 +64,15 @@ export function initWatch (watchers, reactiveData, dependencies, binder) {
             const deps = dependencies
             // 根据key找回对应的依赖
             const dep = deps[key]
-            const watcher = new Watch(watchFunc)
-            // define dependency
-            dep.addTarget(watcher)
-            // get dependency
-            dep.pend()
-            // remove dependency
-            dep.removeTarget()
+            if (dep && dep.pend) { // 确定依赖存在
+              const watcher = new Watch(watchFunc)
+              // define dependency
+              dep.addTarget(watcher)
+              // get dependency
+              dep.pend()
+              // remove dependency
+              dep.removeTarget()
+            }
           }
         }
       }
@@ -74,6 +81,9 @@ export function initWatch (watchers, reactiveData, dependencies, binder) {
 }
 
 export function initComputed (computed, attachedData, binder) {
+  if (!attachedData.__isReactive__) {
+    throw new Error('computed props should be reactive')
+  }
   // 生成用于定义和添加依赖的dep对象
   const dep = new Dep()
   const _type = typeof computed

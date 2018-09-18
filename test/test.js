@@ -1,7 +1,7 @@
 import Watch from '../src/watcher'
 import Dep from '../src/Dep'
 import defineReactive from '../src/defineReactive'
-import init from '../src/initState'
+import init, { initComputed, initWatch } from '../src/initState'
 
 const assert = require('assert')
 
@@ -83,7 +83,7 @@ describe('unit test', function () {
       watcher.excute()
       // remove dependecies
       dep.removeTarget()
-      assert.equal(number, 2)
+      assert.equal(number, 2) // 1+1
       assert.equal(dependencies.number.subs.length, 1)
     })
     it('get dependencies by handy', () => {
@@ -97,7 +97,7 @@ describe('unit test', function () {
     it('test setter', (done) => {
       res.number = 2
       setTimeout(() => {
-        assert.equal(number, 6)
+        assert.equal(number, 6) // 2(原来的值) + 2(func) +2(anotherFunc)
         done()
       }, 100)
     })
@@ -232,6 +232,45 @@ describe('unit test', function () {
         res.data.numA = 2
       }
       assert.throws(iThrowError, Error, 'can not set value in a computed props')
+    })
+  })
+  describe('test initWatch', () => {
+    it('throw error if data is not reactive', () => {
+      const iThrowError = () => {
+        const obj = {
+          data: {
+            a: 1
+          },
+          watch: {
+            a: {}
+          }
+        }
+        initWatch(obj.watch, obj.data, {}, obj)
+      }
+      assert.throws(iThrowError, Error, 'watched data should be reactive')
+    })
+  })
+  describe('test initComputed', () => {
+    it('throw error if data is not reactive', () => {
+      const iThrowError = () => {
+        const obj = {
+          data: {
+            a: 1,
+            b: 2,
+            c: 3
+          },
+          computed: {
+            numA () {
+              return this.data.a + this.data.b
+            },
+            numB () {
+              return this.data.b + this.data.c
+            }
+          }
+        }
+        initComputed(obj.computed, obj.data, obj)
+      }
+      assert.throws(iThrowError, Error, 'computed props should be reactive')
     })
   })
 })
