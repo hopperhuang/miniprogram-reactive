@@ -1,6 +1,6 @@
 import Watch from '../src/watcher'
 import Dep from '../src/Dep'
-import defineReactive from '../src/defineReactive'
+import defineReactive, { getDependency } from '../src/defineReactive'
 import init, { initComputed, initWatch } from '../src/initState'
 
 const assert = require('assert')
@@ -104,6 +104,17 @@ describe('unit test', function () {
     it('set the same value, watcher will not call', () => {
       res.number = 2
       assert.equal(number, 6)
+    })
+    it('test get dependency', () => {
+      const deps = {
+        a: {
+          b: {
+            c: 1
+          }
+        }
+      }
+      const dep = getDependency(deps, 'a.b.c')
+      assert.equal(dep, 1)
     })
   })
   describe('test init', () => {

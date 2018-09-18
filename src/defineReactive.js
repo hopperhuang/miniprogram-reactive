@@ -1,7 +1,18 @@
 import Dep from './Dep'
 
 // 用于收集依赖
-// export const dependencies = {}
+export function getDependency (deps, keyDescription) {
+  const depsType = typeof deps
+  if (depsType === 'object' && !!deps && !Array.isArray(deps)) { // 是一个对象
+    const keys = keyDescription.split('.')
+    let dep = deps
+    for (let index = 0; index < keys.length; index++) {
+      const key = keys[index]
+      dep = dep[key]
+    }
+    return dep
+  }
+}
 
 const defineReactive = (obj) => {
   const dependencies = {}
