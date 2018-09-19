@@ -112,6 +112,17 @@ describe('unit test', function () {
       const dep = getDependency(deps, 'a.b.c')
       assert.equal(dep, 1)
     })
+    it('test deep dependency', () => {
+      const data = {
+        a: {
+          b: {
+            c: 1
+          }
+        }
+      }
+      const { dependencies } = defineReactive(data)
+      assert.equal(!!dependencies['a.b.c'], true)
+    })
   })
   describe('test init', () => {
     let numberA = 1
@@ -158,6 +169,31 @@ describe('unit test', function () {
       setTimeout(() => {
         assert.equal(numberA, 3) // 1+2
         assert.equal(numberC, 7) // 3+4
+        done()
+      }, 100)
+    })
+    it('test deep watch', (done) => {
+      let number = 1
+      const object = {
+        data: {
+          a: {
+            b: {
+              c: 1
+            }
+          }
+        },
+        watch: {
+          'a.b.c': {
+            handler () {
+              number += 1
+            }
+          }
+        }
+      }
+      const o = init(object)
+      o.data.a.b.c = 2
+      setTimeout(() => {
+        assert.equal(number, 2)
         done()
       }, 100)
     })
@@ -215,6 +251,28 @@ describe('unit test', function () {
       res.data.a = 2
       setTimeout(() => {
         assert.equal(res.data.numA, 4)
+        done()
+      }, 100)
+    })
+    it('test deep computed', (done) => {
+      const object = {
+        data: {
+          a: {
+            b: {
+              c: 1
+            }
+          }
+        },
+        computed: {
+          num () {
+            return this.data.a.b.c + 1
+          }
+        }
+      }
+      const o = init(object)
+      o.data.a.b.c = 2
+      setTimeout(() => {
+        assert.equal(o.data.num, 3)
         done()
       }, 100)
     })

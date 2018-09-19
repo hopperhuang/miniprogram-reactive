@@ -21,8 +21,8 @@ export function initWatch (watchers, reactiveData, dependencies, binder) {
     // const dep = new Dep()
     // 生成dep实例，用于将Dep添加target和删除target
     keys.forEach(key => {
-      // 判断key，在reactiveData中是否存在对应的属性, 存在则添加watcher
-      if (reactiveData.hasOwnProperty(key)) {
+      // 判断key，在reactiveData中是否存在对应的属性, 存在则添加watcher, 支持deep watch，判断对应的依赖是否存在
+      if (reactiveData.hasOwnProperty(key) || dependencies[key]) {
         const _watch = watchers[key]
         const _type = typeof _watch
         if (_type === 'function') { // type是一个function， 延迟执行，data对应的key变动时才促发watcher
