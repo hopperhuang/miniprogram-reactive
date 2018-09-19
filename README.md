@@ -1,5 +1,5 @@
 # reactive data
 
-reactive data, 仅仅对data的第一级props做监听, 类似vue的实现
+reactive data, 对data进行监视，可以computed,也可以watch
 
 ```
