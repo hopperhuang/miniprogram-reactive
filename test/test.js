@@ -123,6 +123,13 @@ describe('unit test', function () {
       const { dependencies } = defineReactive(data)
       assert.equal(!!dependencies['a.b.c'], true)
     })
+    it('test array dependency', () => {
+      const data = {
+        numbs: [ 1, 2, 3 ]
+      }
+      const { dependencies } = defineReactive(data)
+      assert.equal(!!dependencies['numbs.2'].id, true)
+    })
   })
   describe('test init', () => {
     let numberA = 1
@@ -192,6 +199,27 @@ describe('unit test', function () {
       }
       const o = init(object)
       o.data.a.b.c = 2
+      setTimeout(() => {
+        assert.equal(number, 2)
+        done()
+      }, 100)
+    })
+    it('test watch array', (done) => {
+      let number = 1
+      const object = {
+        data: {
+          numbs: [ 1, 2, 3 ]
+        },
+        watch: {
+          'numbs.1': {
+            handler () {
+              number += 1
+            }
+          }
+        }
+      }
+      const o = init(object)
+      o.data.numbs[1] = 3
       setTimeout(() => {
         assert.equal(number, 2)
         done()
