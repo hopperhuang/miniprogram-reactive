@@ -11,4 +11,4 @@ class Watch {
   }
 }
 
-export default Watch
+module.exports = Watch

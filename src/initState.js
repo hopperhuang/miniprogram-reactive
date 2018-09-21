@@ -1,8 +1,8 @@
-import defineReactive from './defineReactive'
-import Watch from './watcher'
-import Dep from './Dep'
+const { defineReactive } = require('./defineReactive')
+const Watch = require('./watcher')
+const Dep = require('./Dep')
 
-export function initState (data) {
+function initState (data) {
   const { res: reactiveData, dependencies } = defineReactive(data)
   return {
     reactiveData,
@@ -10,7 +10,7 @@ export function initState (data) {
   }
 }
 
-export function initWatch (watchers, reactiveData, dependencies, binder) {
+function initWatch (watchers, reactiveData, dependencies, binder) {
   if (!reactiveData.__isReactive__) {
     throw new Error('watched data should be reactive')
   }
@@ -84,7 +84,7 @@ export function initWatch (watchers, reactiveData, dependencies, binder) {
   }
 }
 
-export function initComputed (computed, attachedData, binder) {
+function initComputed (computed, attachedData, binder) {
   if (!attachedData.__isReactive__) {
     throw new Error('computed props should be reactive')
   }
@@ -142,4 +142,9 @@ function init (obj) {
   return binder
 }
 
-export default init
+module.exports = {
+  init,
+  initState,
+  initWatch,
+  initComputed
+}

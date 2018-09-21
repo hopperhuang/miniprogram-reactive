@@ -1,7 +1,7 @@
 import Watch from '../src/watcher'
 import Dep from '../src/Dep'
-import defineReactive, { getDependency } from '../src/defineReactive'
-import init, { initComputed, initWatch } from '../src/initState'
+import { defineReactive, getDependency } from '../src/defineReactive'
+import { init, initComputed, initWatch } from '../src/initState'
 
 const assert = require('assert')
 

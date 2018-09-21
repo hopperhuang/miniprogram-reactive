@@ -1,7 +1,7 @@
-import Dep from './Dep'
+const Dep = require('./Dep')
 
 // 用于收集依赖
-export function getDependency (deps, keyDescription) {
+function getDependency (deps, keyDescription) {
   const depsType = typeof deps
   if (depsType === 'object' && !!deps && !Array.isArray(deps)) { // 是一个对象
     const dep = deps[keyDescription]
@@ -58,4 +58,7 @@ const defineReactive = (obj, deps, superKey) => {
 //   return dependencies
 // }
 
-export default defineReactive
+module.exports = {
+  getDependency,
+  defineReactive
+}

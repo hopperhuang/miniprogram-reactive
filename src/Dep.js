@@ -40,4 +40,4 @@ class Dep {
 
 Dep.target = null
 
-export default Dep
+module.exports = Dep
