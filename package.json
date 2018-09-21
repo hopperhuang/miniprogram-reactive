@@ -1,6 +1,6 @@
 {
-  "name": "reaction-obsevable",
-  "version": "0.1.3",
+  "name": "miniprogram-reactive",
+  "version": "0.0.1",
   "description": "reaction javasctipt project",
   "main": "index.js",
   "directories": {
