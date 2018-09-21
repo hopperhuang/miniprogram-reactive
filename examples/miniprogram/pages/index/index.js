@@ -1,4 +1,4 @@
-const { init, initComputed, initWatch } = require('../../script/index')
+const initPage = require('../../script/initPage')
 
 const obj = {
   data: {
@@ -15,11 +15,6 @@ const obj = {
     }
   },
   watch: {
-    // shallow watch
-    number () {
-      // console.log(this)
-      console.log('number change')
-    },
     'number.a': { // deep watch
       handler () {
         console.log('number.a change')
@@ -28,7 +23,7 @@ const obj = {
     // shallow watch
     v: {
       handler () {
-        console.log('shallow watch immdeiate')
+        console.log('shallow watch immdeiate v: ' + this.data.v)
       },
       immediate: true
     }
@@ -42,17 +37,10 @@ const obj = {
     }
   }
 }
-
-const o = init(obj, true)
-const { data } = o
-// index.js
-// 获取应用实例
 const app = getApp()
 
-// Page.prototype.sayhi = () => { console.log("sayhi") }
-
-Page({
-  data,
+initPage({
+  ...obj,
   // 事件处理函数
   bindViewTap: function () {
     wx.navigateTo({
@@ -60,14 +48,6 @@ Page({
     })
   },
   onLoad: function () {
-    const d = Object.getOwnPropertyDescriptor(this, 'data')
-    Object.defineProperty(this, 'data', {
-      ...d,
-      value: data
-    })
-    initComputed(obj.computed, this.data, this, true)
-    initWatch(obj.watch, this.data, o.__dep__, this)
-    // console.log(Object.getOwnPropertyDescriptor(this, 'data'))
     if (app.globalData.userInfo) {
       this.setData({
         userInfo: app.globalData.userInfo,
@@ -96,7 +76,6 @@ Page({
     }
   },
   getUserInfo: function (e) {
-    console.log(e)
     app.globalData.userInfo = e.detail.userInfo
     this.setData({
       userInfo: e.detail.userInfo,
@@ -109,12 +88,8 @@ Page({
     })
   },
   addB () {
-    // this.setData({
-    //   hasUserInfo: !this.data.hasUserInfo
-    // })
     this.setData({
       'number.b': this.data.number.b + 1,
-      // hasUserInfo: !this.data.hasUserInfo,
       v: this.data.v + 1
     })
   }
