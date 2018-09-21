@@ -1,4 +1,4 @@
-const { init, initComputed, initWatch } = require('../../scripts/computed/index')
+const { init, initComputed, initWatch } = require('../../script/index')
 
 const obj = {
   data: {
@@ -12,58 +12,60 @@ const obj = {
     number: {
       a: 1,
       b: 2
-    },
+    }
   },
   watch: {
-    number() {
+    // shallow watch
+    number () {
       // console.log(this)
       console.log('number change')
     },
-    // hasUserInfo: {
-    //   handler() {
-    //     console.log('hasUserInfo...')
-    //   }
-    // },
+    'number.a': { // deep watch
+      handler () {
+        console.log('number.a change')
+      }
+    },
+    // shallow watch
     v: {
-      handler() {
-        console.log('v')
+      handler () {
+        console.log('shallow watch immdeiate')
       },
       immediate: true
     }
   },
   computed: {
-    c() {
+    c () { // deep computed
       return this.data.number.a + 1
     },
-    d() {
+    d () {
       return this.data.number.b + 1
     }
   }
 }
 
-const o = init(obj)
+const o = init(obj, true)
 const { data } = o
-//index.js
-//获取应用实例
+// index.js
+// 获取应用实例
 const app = getApp()
 
 // Page.prototype.sayhi = () => { console.log("sayhi") }
 
 Page({
   data,
-  //事件处理函数
-  bindViewTap: function() {
+  // 事件处理函数
+  bindViewTap: function () {
     wx.navigateTo({
       url: '../logs/logs'
     })
   },
   onLoad: function () {
     const d = Object.getOwnPropertyDescriptor(this, 'data')
-    Object.defineProperty(this,'data', {
+    Object.defineProperty(this, 'data', {
       ...d,
-      value: data,
+      value: data
     })
-    initComputed(obj.computed, this.data, this)
+    initComputed(obj.computed, this.data, this, true)
     initWatch(obj.watch, this.data, o.__dep__, this)
     // console.log(Object.getOwnPropertyDescriptor(this, 'data'))
     if (app.globalData.userInfo) {
@@ -71,7 +73,7 @@ Page({
         userInfo: app.globalData.userInfo,
         hasUserInfo: true
       })
-    } else if (this.data.canIUse){
+    } else if (this.data.canIUse) {
       // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
       // 所以此处加入 callback 以防止这种情况
       app.userInfoReadyCallback = res => {
@@ -93,7 +95,7 @@ Page({
       })
     }
   },
-  getUserInfo: function(e) {
+  getUserInfo: function (e) {
     console.log(e)
     app.globalData.userInfo = e.detail.userInfo
     this.setData({
@@ -101,23 +103,17 @@ Page({
       hasUserInfo: true
     })
   },
-  addA() {
+  addA () {
     this.setData({
-      number: {
-        ...this.data.number,
-        a: this.data.number.a + 1
-      }
+      'number.a': this.data.number.a + 1
     })
   },
-  addB() {
+  addB () {
     // this.setData({
     //   hasUserInfo: !this.data.hasUserInfo
     // })
     this.setData({
-      number: {
-        ...this.data.number,
-        b: this.data.number.b + 1
-      },
+      'number.b': this.data.number.b + 1,
       // hasUserInfo: !this.data.hasUserInfo,
       v: this.data.v + 1
     })
