@@ -5,8 +5,8 @@ const path = require('path')
 const copy = () => {
   const filepath = __dirname
   const from = path.resolve(filepath, '../src')
-  const to = path.resolve(filepath, '../examples/miniprogram/script')
-  exec(`cp -rf ${from}/ ${to}`, (err, stdout, stderr) => {
+  const to = path.resolve(filepath, '../examples/miniprogram/scripts')
+  exec(`rm -rf ${to} && cp -rf ${from}/ ${to}`, (err, stdout, stderr) => {
     if (err) {
       console.error('error: ' + err)
       return
