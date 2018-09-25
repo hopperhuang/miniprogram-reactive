@@ -1,3 +1,6 @@
-<view>
-    这是一个组件
+<view bindtap="changeGame" >
+    {{game}} : {{name}}
+    <view>
+        {{vGame}}
+    </view>
 </view>

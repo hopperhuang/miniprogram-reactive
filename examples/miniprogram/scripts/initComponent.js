@@ -17,10 +17,20 @@ function decorateAttached (oldAttached, data, watch, computed) {
           rData[key] = oldData[key]
         }
       }
+      return rData
     }
     const reactiveDataWithProps = mapPropsToReactiveData(_reactiveData, this.data)
     // difine data
     Object.defineProperty(this, 'data', {
+      ...dataDescriptions,
+      value: reactiveDataWithProps
+    })
+    // re-write __data__ and __viewData__
+    Object.defineProperty(this, '__data__', {
+      ...dataDescriptions,
+      value: reactiveDataWithProps
+    })
+    Object.defineProperty(this, '__viewData__', {
       ...dataDescriptions,
       value: reactiveDataWithProps
     })
@@ -34,8 +44,8 @@ function decorateAttached (oldAttached, data, watch, computed) {
 }
 
 function initComponent (Constructor, options) {
-  const { data, attached } = options
-  const decoratedAttached = decorateAttached(attached, data)
+  const { data, attached, watch, computed } = options
+  const decoratedAttached = decorateAttached(attached, data, watch, computed)
   const result = Constructor({
     ...options,
     attached: decoratedAttached
