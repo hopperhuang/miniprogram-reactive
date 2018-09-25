@@ -1,1 +1,5 @@
-{}
+{
+    "usingComponents": {
+        "panel": "../components/panel/index"
+    }
+}
