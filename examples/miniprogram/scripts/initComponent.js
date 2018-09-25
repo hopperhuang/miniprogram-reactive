@@ -39,7 +39,9 @@ function decorateAttached (oldAttached, data, watch, computed) {
     // init watcher, just watch data
     initWatch(watch, _reactiveData, reactiveData.__dep__, this)
     // call old attched
-    oldAttached.apply(this, opts)
+    if (typeof oldAttached === 'function') {
+      oldAttached.apply(this, opts)
+    }
   }
 }
 

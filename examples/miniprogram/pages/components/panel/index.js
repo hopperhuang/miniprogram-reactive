@@ -21,7 +21,7 @@ initComponent(Component, {
     }
   },
   attached () {
-    console.log(this)
+    // console.log(this)
   },
   methods: {
     changeGame () {

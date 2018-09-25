@@ -2,6 +2,8 @@ import Watch from '../src/watcher'
 import Dep from '../src/Dep'
 import { defineReactive, getDependency } from '../src/defineReactive'
 import { init, initComputed, initWatch } from '../src/initState'
+import { decorateAttached } from '../src/initComponent'
+const jComponent = require('j-component')
 
 const assert = require('assert')
 
@@ -365,5 +367,38 @@ describe('unit test', function () {
       }
       assert.throws(iThrowError, Error, 'computed props should be reactive')
     })
+  })
+  describe('test initComponent', () => {
+    // let number = 1
+    // const data = {
+    //   number: 1
+    // }
+    // const watch = {
+    //   number: {
+    //     handler () {
+    //       number += 1
+    //     },
+    //     immediate: true
+    //   }
+    // }
+    // const computed = {
+    //   anotherNumber () {
+    //     return this.data.number + 1
+    //   }
+    // }
+    // const attached = () => {}
+    // const decoratedAttached = decorateAttached(attached, data, watch, computed)
+    // const componentId = jComponent.register(
+    //   'test',
+    //   '<view id="a">xxx</view>',
+    //   {
+    //     id: 'test',
+    //     tagName: 'tecomp',
+    //     // template: '<view>test</view>',
+    //     options: {
+    //       data,
+    //       attached: decoratedAttached
+    //     }
+    //   })
   })
 })

@@ -34,7 +34,9 @@ const initPage = (options) => {
     // init watcher
     initWatch(object.watch, this.data, reactiveData.__dep__, this)
     // run old onload method
-    oldOnLoad.apply(this, opts)
+    if (typeof oldOnLoad === 'function') {
+      oldOnLoad.apply(this, opts)
+    }
   }
   // init page
   const page = Page({
