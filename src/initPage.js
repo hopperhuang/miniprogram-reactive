@@ -20,6 +20,15 @@ const initPage = (options) => {
       ...dataDescriptions,
       value: data
     })
+    // re-write __data__ and __viewData__, otherwise it's buggy when using component in page
+    Object.defineProperty(this, '__data__', {
+      ...dataDescriptions,
+      value: data
+    })
+    Object.defineProperty(this, '__viewData__', {
+      ...dataDescriptions,
+      value: data
+    })
     // init computed value
     initComputed(object.computed, this.data, this, true)
     // init watcher
