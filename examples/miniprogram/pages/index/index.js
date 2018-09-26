@@ -48,7 +48,7 @@ initPage({
     })
   },
   onLoad: function () {
-    // console.log(this)
+    console.log(this.data.c)
     if (app.globalData.userInfo) {
       this.setData({
         userInfo: app.globalData.userInfo,

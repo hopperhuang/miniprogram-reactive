@@ -85,57 +85,80 @@ function initWatch (watchers, reactiveData, dependencies, binder) {
 }
 
 function initComputed (computed, attachedData, binder, isMiniprogram) {
-  if (!attachedData.__isReactive__) {
-    throw new Error('computed props should be reactive')
-  }
-  // 生成用于定义和添加依赖的dep对象
-  const dep = new Dep()
-  const _type = typeof computed
-  if (_type === 'object' && !!_type && !Array.isArray(_type)) { // computed需要是一个对象
-    // const dataKeys = Object.keys(attachedData)
-    const computedKeys = Object.keys(computed)
-    computedKeys.forEach(key => {
-      const dataAndComputedHasTheSameKey = attachedData.hasOwnProperty(key)
-      if (!dataAndComputedHasTheSameKey) { // data和computed的key值不能重复
-        const computedGetter = computed[key]
-        const getterType = typeof computedGetter
-        if (getterType === 'function') { // getter需要是一个function
-          let value
-          const computedFunc = computedGetter.bind(binder)
-          // 通过此方法去设置值
-          const computedMethod = () => {
-            value = computedFunc()
-            if (isMiniprogram) { // 小程序的情况下 通过setdata去改变值
-              binder.setData({
-                [key]: value
-              })
-            }
-          }
-          // 生成watcher
-          const watcher = new Watch(computedMethod)
-          // 定义依赖
-          dep.addTarget(watcher)
-          // 通过excute执行computedMethod,生成初始值，通过reactivedata的getter获取依赖
-          watcher.excute()
-          // 移除依赖
-          dep.removeTarget()
-          // 将对应的key和value定义到
-          if (!isMiniprogram) { // 非小程序的情况下更改getter和setter
-            Object.defineProperty(attachedData, key, {
-              enumerable: true,
-              configurable: true,
-              get () {
-                return value
-              },
-              set () {
-                throw new Error('can not set value in a computed props')
-              }
-            })
-          }
+  return new Promise((resolve, reject) => {
+    if (!attachedData.__isReactive__) {
+      reject(new Error('computed props should be reactive'))
+    }
+    // 生成用于定义和添加依赖的dep对象
+    const dep = new Dep()
+    const _type = typeof computed
+    if (_type === 'object' && !!_type && !Array.isArray(_type)) { // computed需要是一个对象
+      // const dataKeys = Object.keys(attachedData)
+      const computedKeys = Object.keys(computed)
+      // get keys length
+      const { length } = computedKeys
+      // init counts
+      let count = 0
+      // this mehtod will be called after a computed value is set
+      const judgeFinishAndResolve = () => {
+        count++
+        if (count === length) {
+          resolve(true)
         }
       }
-    })
-  }
+      computedKeys.forEach(key => {
+        const dataAndComputedHasTheSameKey = attachedData.hasOwnProperty(key)
+        if (!dataAndComputedHasTheSameKey) { // data和computed的key值不能重复
+          const computedGetter = computed[key]
+          const getterType = typeof computedGetter
+          if (getterType === 'function') { // getter需要是一个function
+            let value
+            const computedFunc = computedGetter.bind(binder)
+            // 通过此方法去设置值
+            const computedMethod = () => {
+              value = computedFunc()
+              if (isMiniprogram) { // 小程序的情况下 通过setdata去改变值
+                binder.setData({
+                  [key]: value
+                }, () => {
+                  judgeFinishAndResolve()
+                })
+              }
+            }
+            // 生成watcher
+            const watcher = new Watch(computedMethod)
+            // 定义依赖
+            dep.addTarget(watcher)
+            // 通过excute执行computedMethod,生成初始值，通过reactivedata的getter获取依赖
+            watcher.excute()
+            // 移除依赖
+            dep.removeTarget()
+            // 将对应的key和value定义到
+            if (!isMiniprogram) { // 非小程序的情况下更改getter和setter
+              Object.defineProperty(attachedData, key, {
+                enumerable: true,
+                configurable: true,
+                get () {
+                  return value
+                },
+                set () {
+                  throw new Error('can not set value in a computed props')
+                }
+              })
+              judgeFinishAndResolve()
+            }
+          } else {
+            reject(new Error('computed should be a function'))
+          }
+        } else {
+          // duplicated
+          reject(new Error('computed key should not be duplicated with the data key'))
+        }
+      })
+    } else { // resolve and do nothing
+      resolve(true)
+    }
+  })
 }
 
 function normalInit (obj) {

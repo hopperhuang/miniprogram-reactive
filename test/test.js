@@ -346,7 +346,7 @@ describe('unit test', function () {
     })
   })
   describe('test initComputed', () => {
-    it('throw error if data is not reactive', () => {
+    it('throw error if data is not reactive', (done) => {
       const iThrowError = () => {
         const obj = {
           data: {
@@ -363,9 +363,61 @@ describe('unit test', function () {
             }
           }
         }
-        initComputed(obj.computed, obj.data, obj)
+        return initComputed(obj.computed, obj.data, obj)
       }
-      assert.throws(iThrowError, Error, 'computed props should be reactive')
+      iThrowError().catch(err => {
+        const thr = () => {
+          throw err
+        }
+        assert.throws(thr, Error, 'computed props should be reactive')
+        done()
+      })
+    })
+    it('throw error if computed is not a function', (done) => {
+      const ithrow = () => {
+        const obj = {
+          data: {
+            a: 1,
+            b: 2,
+            __isReactive__: true
+          },
+          computed: {
+            c: 1
+          }
+        }
+        return initComputed(obj.computed, obj.data, obj)
+      }
+      ithrow().catch(err => {
+        const thr = () => {
+          throw err
+        }
+        assert.throws(thr, Error, 'computed should be a function')
+        done()
+      })
+    })
+    it('throw error if key are duplicated with date\'s key ', (done) => {
+      const ithrow = () => {
+        const obj = {
+          data: {
+            a: 1,
+            b: 2,
+            __isReactive__: true
+          },
+          computed: {
+            a () {
+              return 'a'
+            }
+          }
+        }
+        return initComputed(obj.computed, obj.data, obj)
+      }
+      ithrow().catch(err => {
+        const thr = () => {
+          throw err
+        }
+        assert.throws(thr, Error, 'computed key should not be duplicated with the data key')
+        done()
+      })
     })
   })
   describe('test initComponent', () => {

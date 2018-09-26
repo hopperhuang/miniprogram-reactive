@@ -1,7 +1,7 @@
 const { init, initComputed, initWatch } = require('./index')
 
 function decorateAttached (oldAttached, data, watch, computed) {
-  return function decoratedAttached (opts) {
+  return async function decoratedAttached (opts) {
     // const self = this
     const reactiveData = init({ data, watch, computed }, true)
     // generate reactive data
@@ -35,7 +35,7 @@ function decorateAttached (oldAttached, data, watch, computed) {
       value: reactiveDataWithProps
     })
     // init computed value, just computed data
-    initComputed(computed, _reactiveData, this, true)
+    await initComputed(computed, _reactiveData, this, true)
     // init watcher, just watch data
     initWatch(watch, _reactiveData, reactiveData.__dep__, this)
     // call old attched
