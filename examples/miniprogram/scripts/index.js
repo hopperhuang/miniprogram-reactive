@@ -14,6 +14,28 @@ function _typeof(obj) {
   return _typeof(obj);
 }
 
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
+
+function _defineProperties(target, props) {
+  for (var i = 0; i < props.length; i++) {
+    var descriptor = props[i];
+    descriptor.enumerable = descriptor.enumerable || false;
+    descriptor.configurable = true;
+    if ("value" in descriptor) descriptor.writable = true;
+    Object.defineProperty(target, descriptor.key, descriptor);
+  }
+}
+
+function _createClass(Constructor, protoProps, staticProps) {
+  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+  if (staticProps) _defineProperties(Constructor, staticProps);
+  return Constructor;
+}
+
 function _defineProperty(obj, key, value) {
   if (key in obj) {
     Object.defineProperty(obj, key, {
@@ -48,12 +70,148 @@ function _objectSpread(target) {
   return target;
 }
 
-var _require = require('./defineReactive'),
-    defineReactive = _require.defineReactive;
+var id$1 = 0;
 
-var Watch = require('./watcher');
+var Dep =
+/*#__PURE__*/
+function () {
+  function Dep() {
+    _classCallCheck(this, Dep);
 
-var Dep = require('./Dep');
+    this.subs = [];
+    id$1 += 1;
+    this.id = id$1;
+  } // 增加依赖
+
+
+  _createClass(Dep, [{
+    key: "pend",
+    value: function pend() {
+      var target = Dep.target;
+
+      if (target) {
+        // 判断依赖是否已经被加上
+        var hasDepend = this.subs.findIndex(function (sub) {
+          return sub.id === target.id;
+        }); // 不再重复添加依赖,尚未被加上，则加上依赖
+
+        if (hasDepend === -1) {
+          this.subs.push(target);
+        }
+      }
+    } // 解除依赖
+
+  }, {
+    key: "teardown",
+    value: function teardown(id) {
+      var index = this.subs.findIndex(function (sub) {
+        return sub.id === id;
+      });
+      this.subs.splice(index, 1);
+    } // 移除将要被依赖的对象
+
+  }, {
+    key: "removeTarget",
+    value: function removeTarget() {
+      Dep.target = null;
+    } // 增加将要被依赖的对象
+
+  }, {
+    key: "addTarget",
+    value: function addTarget(target) {
+      Dep.target = target;
+    }
+  }, {
+    key: "notify",
+    value: function notify() {
+      this.subs.forEach(function (sub) {
+        sub.excute();
+      });
+    }
+  }]);
+
+  return Dep;
+}();
+
+Dep.target = null;
+
+var defineReactive = function defineReactive(obj, deps, superKey) {
+  // deps 的形式应该是 { mainkey, 'mainkey.subkey', 'mainkey.subkey.subkye' }的形式
+  var dependencies = deps || {}; // 可能存在祖先依赖，祖先依赖存在的情况下则使用祖先依赖
+
+  var res = {};
+  res.__isReactive__ = true;
+  var keys = Object.keys(obj);
+  keys.forEach(function (key) {
+    var value = obj[key];
+    var dep = new Dep(); // 根据key的结构生成depkey
+
+    var depKey = superKey ? "".concat(superKey, ".").concat(key) : key; // 添加到依赖对象,外部根据key值去调用dep对象
+
+    dependencies[depKey] = dep; // 下面的递归方法需要改，有bug
+    // 如果对应key的值是即value，则继续调用defineReactive，令其变成一个可观察对象
+
+    if (_typeof(value) === 'object' && !!value) {
+      var _defineReactive = defineReactive(value, dependencies, depKey),
+          _res = _defineReactive.res;
+
+      value = _res;
+    }
+
+    Object.defineProperty(res, key, {
+      enumerable: true,
+      configurable: true,
+      get: function get() {
+        // 被使用时添加到依赖
+        dep.pend();
+        return value;
+      },
+      set: function set(newValue) {
+        if (newValue !== value) {
+          value = newValue; // 值得更新时发出通知
+
+          setTimeout(function () {
+            // 异步调用notfiy
+            dep.notify();
+          }); // dep.notify()
+        }
+      }
+    });
+  });
+  return {
+    res: res,
+    dependencies: dependencies
+  };
+}; // export function getDependencies () {
+//   return dependencies
+// }
+// module.exports = {
+//   getDependency,
+//   defineReactive
+// }
+
+var id$2 = 0;
+
+var Watch =
+/*#__PURE__*/
+function () {
+  function Watch(func) {
+    _classCallCheck(this, Watch);
+
+    id$2 += 1;
+    this.id = id$2;
+    this.func = func;
+  }
+
+  _createClass(Watch, [{
+    key: "excute",
+    value: function excute() {
+      this.func();
+    }
+  }]);
+
+  return Watch;
+}();
 
 function initState(data) {
   var _defineReactive = defineReactive(data),
@@ -272,12 +430,6 @@ function init(obj, isMiniprogram) {
 //   initComputed
 // }
 
-// init miniprogram page
-var _require$1 = require('./initState'),
-    init$1 = _require$1.init,
-    initComputed$1 = _require$1.initComputed,
-    initWatch$1 = _require$1.initWatch;
-
 var initPage = function initPage(options) {
   var object = {
     data: options.data,
@@ -285,7 +437,7 @@ var initPage = function initPage(options) {
     computed: options.computed // generate reactiveDate
 
   };
-  var reactiveData = init$1(object, true); // get data
+  var reactiveData = init(object, true); // get data
 
   var data = reactiveData.data;
   var oldOnLoad = options.onLoad; // re-write onload
@@ -304,9 +456,9 @@ var initPage = function initPage(options) {
       value: data
     })); // init computed value
 
-    initComputed$1(object.computed, this.data, this, true); // init watcher
+    initComputed(object.computed, this.data, this, true); // init watcher
 
-    initWatch$1(object.watch, this.data, reactiveData.__dep__, this); // run old onload method
+    initWatch(object.watch, this.data, reactiveData.__dep__, this); // run old onload method
 
     if (typeof oldOnLoad === 'function') {
       oldOnLoad.apply(this, opts);
@@ -321,15 +473,10 @@ var initPage = function initPage(options) {
   return page;
 }; // module.exports = initPage
 
-var _require$2 = require('./initState'),
-    init$2 = _require$2.init,
-    initComputed$2 = _require$2.initComputed,
-    initWatch$2 = _require$2.initWatch;
-
 function decorateAttached(oldAttached, data, watch, computed) {
   return function decoratedAttached(opts) {
     // const self = this
-    var reactiveData = init$2({
+    var reactiveData = init({
       data: data,
       watch: watch,
       computed: computed
@@ -367,9 +514,9 @@ function decorateAttached(oldAttached, data, watch, computed) {
       value: reactiveDataWithProps
     })); // init computed value, just computed data
 
-    initComputed$2(computed, _reactiveData, this, true); // init watcher, just watch data
+    initComputed(computed, _reactiveData, this, true); // init watcher, just watch data
 
-    initWatch$2(watch, _reactiveData, reactiveData.__dep__, this); // call old attched
+    initWatch(watch, _reactiveData, reactiveData.__dep__, this); // call old attched
 
     if (typeof oldAttached === 'function') {
       oldAttached.apply(this, opts);
