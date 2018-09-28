@@ -1,6 +1,6 @@
 const { init, initComputed, initWatch } = require('./initState')
 
-function decorateAttached (oldAttached, data, watch, computed) {
+export function decorateAttached (oldAttached, data, watch, computed) {
   return function decoratedAttached (opts) {
     // const self = this
     const reactiveData = init({ data, watch, computed }, true)
@@ -45,7 +45,7 @@ function decorateAttached (oldAttached, data, watch, computed) {
   }
 }
 
-function initComponent (Constructor, options) {
+export function initComponent (Constructor, options) {
   const { data, attached, watch, computed } = options
   const decoratedAttached = decorateAttached(attached, data, watch, computed)
   const result = Constructor({
@@ -55,7 +55,7 @@ function initComponent (Constructor, options) {
   return result
 }
 
-module.exports = {
-  decorateAttached,
-  initComponent
-}
+// module.exports = {
+//   decorateAttached,
+//   initComponent
+// }

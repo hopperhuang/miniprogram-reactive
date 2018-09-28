@@ -1,8 +1,12 @@
-const init = require('./initState').init
-const initPage = require('./initPage')
-const initComponent = require('./initComponent').initComponent
+// const init = require('./initState').init
+// const initPage = require('./initPage')
+// const initComponent = require('./initComponent').initComponent
 
-module.exports = {
+import { init } from './initState'
+import initPage from './initPage'
+import { initComponent } from './initComponent'
+
+export default {
   init,
   initPage,
   initComponent

@@ -1,7 +1,7 @@
 const Dep = require('./Dep')
 
 // 用于收集依赖
-function getDependency (deps, keyDescription) {
+export function getDependency (deps, keyDescription) {
   const depsType = typeof deps
   if (depsType === 'object' && !!deps && !Array.isArray(deps)) { // 是一个对象
     const dep = deps[keyDescription]
@@ -9,7 +9,7 @@ function getDependency (deps, keyDescription) {
   }
 }
 
-const defineReactive = (obj, deps, superKey) => {
+export const defineReactive = (obj, deps, superKey) => {
   // deps 的形式应该是 { mainkey, 'mainkey.subkey', 'mainkey.subkey.subkye' }的形式
   const dependencies = deps || {} // 可能存在祖先依赖，祖先依赖存在的情况下则使用祖先依赖
   const res = {}
@@ -58,7 +58,7 @@ const defineReactive = (obj, deps, superKey) => {
 //   return dependencies
 // }
 
-module.exports = {
-  getDependency,
-  defineReactive
-}
+// module.exports = {
+//   getDependency,
+//   defineReactive
+// }

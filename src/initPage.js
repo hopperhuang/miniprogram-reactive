@@ -47,4 +47,5 @@ const initPage = (options) => {
   return page
 }
 
-module.exports = initPage
+// module.exports = initPage
+export default initPage
