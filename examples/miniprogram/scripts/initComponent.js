@@ -1,4 +1,4 @@
-const { init, initComputed, initWatch } = require('./index')
+const { init, initComputed, initWatch } = require('./initState')
 
 function decorateAttached (oldAttached, data, watch, computed) {
   return function decoratedAttached (opts) {

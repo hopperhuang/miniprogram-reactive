@@ -2,8 +2,8 @@ import Watch from '../src/watcher'
 import Dep from '../src/Dep'
 import { defineReactive, getDependency } from '../src/defineReactive'
 import { init, initComputed, initWatch } from '../src/initState'
-import { decorateAttached } from '../src/initComponent'
-const jComponent = require('j-component')
+// import { decorateAttached } from '../src/initComponent'
+// const jComponent = require('j-component')
 
 const assert = require('assert')
 

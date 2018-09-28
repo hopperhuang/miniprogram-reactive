@@ -1,5 +1,5 @@
 // init miniprogram page
-const { init, initComputed, initWatch } = require('./index')
+const { init, initComputed, initWatch } = require('./initState')
 
 const initPage = (options) => {
   const object = {

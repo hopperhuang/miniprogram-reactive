@@ -1,4 +1,4 @@
-const { initComponent } = require('../../../scripts/initComponent')
+const { initComponent } = require('../../../scripts/index')
 
 initComponent(Component, {
   data: {

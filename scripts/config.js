@@ -24,7 +24,7 @@ function getRollupConfigs () {
         plugins: [
           '@babel/plugin-proposal-object-rest-spread',
           '@babel/plugin-transform-spread',
-          '@babel/plugin-external-helpers'
+          '@babel/plugin-external-helpers' // using babel-upgrade to resolve conflict, issue: https://github.com/rollup/rollup-plugin-babel/issues/251
         ]
       }),
       nodeResolve({

@@ -1,4 +1,4 @@
-const initPage = require('../../scripts/initPage')
+const { initPage } = require('../../scripts/index')
 
 const obj = {
   data: {
