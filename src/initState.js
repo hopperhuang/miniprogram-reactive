@@ -1,6 +1,6 @@
-const { defineReactive } = require('./defineReactive')
-const Watch = require('./watcher')
-const Dep = require('./Dep')
+import { defineReactive } from './defineReactive'
+import Watch from './watcher'
+import Dep from './Dep'
 
 export function initState (data) {
   const { res: reactiveData, dependencies } = defineReactive(data)

@@ -1,4 +1,4 @@
-const Dep = require('./Dep')
+import Dep from './Dep'
 
 // 用于收集依赖
 export function getDependency (deps, keyDescription) {

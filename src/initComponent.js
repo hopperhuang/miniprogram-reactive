@@ -1,4 +1,4 @@
-const { init, initComputed, initWatch } = require('./initState')
+import { init, initComputed, initWatch } from './initState'
 
 export function decorateAttached (oldAttached, data, watch, computed) {
   return function decoratedAttached (opts) {
