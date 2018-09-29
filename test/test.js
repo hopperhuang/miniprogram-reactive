@@ -4,7 +4,6 @@ import { defineReactive, getDependency } from '../src/defineReactive'
 import { init, initComputed, initWatch } from '../src/initState'
 // import { decorateAttached } from '../src/initComponent'
 // const jComponent = require('j-component')
-console.log(Dep)
 const assert = require('assert')
 
 describe('unit test', function () {

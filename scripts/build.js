@@ -1,7 +1,7 @@
 const rollup = require('rollup')
 const getRollupConfigs = require('./config')
 
-const configs = getRollupConfigs()
+const configs = getRollupConfigs('production')
 const inputOptions = {
   input: configs.input,
   plugins: configs.plugins

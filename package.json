@@ -8,6 +8,7 @@
   },
   "scripts": {
     "build": "node scripts/build.js",
+    "dev": "node scripts/develop.js",
     "copy": "node scripts/copy.js",
     "test": "mocha --require @babel/polyfill --require @babel/register",
     "coverage": "nyc npm test && nyc report --reporter=text-lcov | coveralls"
@@ -38,7 +39,9 @@
     "nyc": "^11.6.0",
     "rollup": "^0.66.2",
     "rollup-plugin-babel": "^4.0.1",
+    "rollup-plugin-cleanup": "^3.0.0",
     "rollup-plugin-commonjs": "^9.1.8",
-    "rollup-plugin-node-resolve": "^3.4.0"
+    "rollup-plugin-node-resolve": "^3.4.0",
+    "rollup-plugin-uglify": "^6.0.0"
   }
 }

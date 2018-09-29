@@ -1,8 +1,10 @@
 const nodeResolve = require('rollup-plugin-node-resolve')
 const babel = require('rollup-plugin-babel')
 const commonjs = require('rollup-plugin-commonjs')
+const cleanup = require('rollup-plugin-cleanup')
+const { uglify } = require('rollup-plugin-uglify')
 
-function getRollupConfigs () {
+function getRollupConfigs (type) {
   return {
     input: 'src/index.js',
     output: {
@@ -10,6 +12,7 @@ function getRollupConfigs () {
       format: 'cjs'
     },
     plugins: [
+      ((type === 'production') && uglify()),
       babel({
         exclude: 'node_modules/**',
         babelrc: false, // must be false, or it will be confilct with mocha
@@ -33,7 +36,8 @@ function getRollupConfigs () {
       }),
       commonjs({
 
-      })
+      }),
+      ((type === 'production') && cleanup())
     ]
   }
 }
