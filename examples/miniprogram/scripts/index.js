@@ -430,7 +430,7 @@ function init(obj, isMiniprogram) {
 //   initComputed
 // }
 
-var initPage = function initPage(options) {
+var initPage = function initPage(constructor, options) {
   var object = {
     data: options.data,
     watch: options.watch,
@@ -466,7 +466,7 @@ var initPage = function initPage(options) {
   } // init page
 
 
-  var page = Page(_objectSpread({}, options, {
+  var page = constructor(_objectSpread({}, options, {
     data: data,
     onLoad: onLoad
   }));

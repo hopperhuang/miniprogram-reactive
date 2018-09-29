@@ -1,7 +1,7 @@
 // init miniprogram page
 import { init, initComputed, initWatch } from './initState'
 
-const initPage = (options) => {
+const initPage = (constructor, options) => {
   const object = {
     data: options.data,
     watch: options.watch,
@@ -39,7 +39,7 @@ const initPage = (options) => {
     }
   }
   // init page
-  const page = Page({
+  const page = constructor({
     ...options,
     data,
     onLoad

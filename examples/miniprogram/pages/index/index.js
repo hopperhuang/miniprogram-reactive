@@ -39,7 +39,7 @@ const obj = {
 }
 const app = getApp()
 
-initPage({
+initPage(Page, {
   ...obj,
   // 事件处理函数
   bindViewTap: function () {
