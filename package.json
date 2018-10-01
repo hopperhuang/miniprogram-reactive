@@ -1,6 +1,6 @@
 {
   "name": "miniprogram-reactive",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "let miniprogram's data get watched and computed",
   "keywords": [
     "miniprogram",
@@ -18,6 +18,7 @@
     "example": "examples"
   },
   "scripts": {
+    "prepublish": "node scripts/prepublish.js",
     "build": "node scripts/build.js",
     "dev": "node scripts/develop.js",
     "copy": "node scripts/copy.js",
