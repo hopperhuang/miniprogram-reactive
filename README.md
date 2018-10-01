@@ -8,9 +8,9 @@
 
 ---
 
-##小程序api
+## 小程序api
 
-initPage
+**initPage**
 
 初始化页面：
 
@@ -38,7 +38,7 @@ initPage(options)
 
 ---
 
-initComponent
+**initComponent**
 
 初始化组件
 
@@ -66,9 +66,9 @@ initComponent(options)
 
 调用this.setData属性更改对应的值时，watch方法会被调用，computed属性会被重新计算
 
-##一般用法
+## 一般用法
 
-init
+**init**
 
 监察数据变化：
 
@@ -95,7 +95,7 @@ const observable = init(options)
 
 修改observable.data对应的属性值时,watch方法会被调用，computed属性会被重新计算
 
-##watch属性
+## watch属性
 
 观察data对应的key值,key发生变化时,对应的watch方法也会被调用
 
@@ -154,7 +154,7 @@ const options = {
 const observable = init(options)
 ```
 
-##coputed属性
+## coputed属性
 
 比如:
 
@@ -173,7 +173,7 @@ const observable = init(options)
 assert.equal(observable.anotherNumber, 2) // true
 ```
 
-##具体例子
+## 具体例子
 
 请参考examples/miniprogram中的例子
 
