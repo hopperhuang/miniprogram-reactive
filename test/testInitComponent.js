@@ -3,7 +3,7 @@ import { decorateAttached } from '../src/initComponent'
 const assert = require('assert')
 const _ = require('../tools/test/helper')
 
-/* global describe it */
+/* global describe it Behavior */
 describe('test iniComponent', () => {
   it('test render', async (done) => {
     let number = 1
@@ -42,6 +42,7 @@ describe('test iniComponent', () => {
     component.setData({ number: 2 })
     setTimeout(() => {
       assert.equal(_.match(component.dom, '<wx-view>2-3</wx-view>'), true)
+      assert.equal(number, 2)
       done()
     }, 100)
   })
