@@ -188,5 +188,5 @@ assert.equal(observable.anotherNumber, 2) // true
 
 ## 提示
 
--- 小程序使用者可以先安装npm包，然后复制lib/index.js到项目目录下使用
--- 小程序使用者也可以在github上下载源代码，npm run build, 手动构建好后，将lib/index.js复制到项目目录下
+- 小程序使用者可以先安装npm包，然后复制lib/index.js到项目目录下使用
+- 小程序使用者也可以在github上下载源代码，npm run build, 手动构建好后，将lib/index.js复制到项目目录下
