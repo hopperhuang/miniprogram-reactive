@@ -1,11 +1,11 @@
 import { decorateAttached } from '../src/initComponent'
 
 const assert = require('assert')
-const jComponent = require('j-component')
+const _ = require('../tools/test/helper')
 
 /* global describe it */
 describe('test iniComponent', () => {
-  it('test decorateAttached', (done) => {
+  it('test render', async (done) => {
     let number = 1
     const data = {
       number: 1
@@ -23,31 +23,26 @@ describe('test iniComponent', () => {
         return this.data.number + 1
       }
     }
-
     const attached = () => {}
     const decoratedAttached = decorateAttached(attached, data, watch, computed)
-    jComponent.register({
-      id: 'view',
-      tagName: `wx-view`,
-      template: '<slot/>'
-    })
-    const componentId = jComponent.register({
-      id: 'testComponent',
-      tagName: 'test-component',
-      template: '<view><view>{{anotherNumber}}</view><view>{{number}}</view></view>',
-      usingComponents: { // 使用到的自定义组件
-        'view': 'view' // xxx 为组件 id，调 register 方法时会返回
-      },
-      options: {
-        data,
+    const beh = Behavior({
+      lifetimes: {
         attached: decoratedAttached
       }
     })
+    let componentId = await _.load({
+      template: '<view>{{number}}-{{anotherNumber}}</view>',
+      behaviors: [beh],
+      data
+    })
+    let component = _.render(componentId)
+    const parent = document.createElement('parent-wrapper')
+    component.attach(parent)
+    assert.equal(_.match(component.dom, '<wx-view>1-2</wx-view>'), true)
+    component.setData({ number: 2 })
     setTimeout(() => {
-      let comp = jComponent.create(componentId)
-      console.log(comp.data, 'data')
+      assert.equal(_.match(component.dom, '<wx-view>2-3</wx-view>'), true)
       done()
     }, 100)
-    assert.equal(componentId, 'testComponent')
   })
 })
