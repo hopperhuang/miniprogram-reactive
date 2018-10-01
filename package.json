@@ -1,10 +1,21 @@
 {
   "name": "miniprogram-reactive",
   "version": "0.0.1",
-  "description": "reaction javasctipt project",
-  "main": "index.js",
+  "description": "let miniprogram's data get watched and computed",
+  "keywords": [
+    "miniprogram",
+    "computed",
+    "watch"
+  ],
+  "homepage": "https://github.com/hopperhuang/miniprogram-reactive#readme",
+  "bugs": {
+    "url": "https://github.com/hopperhuang/miniprogram-reactive/issues",
+    "email": "hopper_guilt@gmail.com"
+  },
+  "main": "lib/index.js",
   "directories": {
-    "test": "test"
+    "test": "test",
+    "example": "examples"
   },
   "scripts": {
     "build": "node scripts/build.js",
