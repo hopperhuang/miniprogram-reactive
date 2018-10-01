@@ -1,4 +1,5 @@
 const rollup = require('rollup')
+const exec = require('child_process').exec
 const getRollupConfigs = require('./config')
 
 const configs = getRollupConfigs('production')
@@ -16,5 +17,8 @@ async function build () {
   await bundle.write(outputOptions)
 }
 
-build()
-module.exports = build
+module.exports = () => {
+  exec('rm -rf lib', () => {
+    build()
+  })
+}

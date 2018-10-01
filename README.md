@@ -1,5 +1,7 @@
 # reactive data
 
+[![Coverage Status](https://coveralls.io/repos/github/hopperhuang/miniprogram-reactive/badge.svg?branch=master)](https://coveralls.io/github/hopperhuang/miniprogram-reactive?branch=master)
+
 让数据变的observable
     - watch属性，监听data对应的属性变化
     - computed属性，根据data衍生出相应的属性
@@ -7,6 +9,12 @@
     - 支持深层嵌套属性的监听
 
 ---
+
+## 安装
+
+```
+npm install miniprogram-reactive --save
+```
 
 ## 小程序api
 
@@ -177,3 +185,8 @@ assert.equal(observable.anotherNumber, 2) // true
 
 请参考examples/miniprogram中的例子
 
+
+## 提示
+
+-- 小程序使用者可以先安装npm包，然后复制lib/index.js到项目目录下使用
+-- 小程序使用者也可以在github上下载源代码，npm run build, 手动构建好后，将lib/index.js复制到项目目录下
