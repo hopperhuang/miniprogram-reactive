@@ -3,10 +3,11 @@
 [![Coverage Status](https://coveralls.io/repos/github/hopperhuang/miniprogram-reactive/badge.svg?branch=master)](https://coveralls.io/github/hopperhuang/miniprogram-reactive?branch=master)
 
 让数据变的observable
-    - watch属性，监听data对应的属性变化
-    - computed属性，根据data衍生出相应的属性
-    - 高效，相应依赖发生变化时，监听方法才会执行
-    - 支持深层嵌套属性的监听
+
+- watch属性，监听data对应的属性变化
+- computed属性，根据data衍生出相应的属性
+- 高效，相应依赖发生变化时，监听方法才会执行
+- 支持深层嵌套属性的监听
 
 ---
 
