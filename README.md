@@ -40,7 +40,7 @@ const options = {
         }
     }
 }
-initPage(options)
+initPage(Page, options)
 ```
 
 调用this.setData属性更改对应的值时，watch方法会被调用，computed属性会被重新计算
@@ -69,7 +69,7 @@ const options = {
         }
     }
 }
-initComponent(options)
+initComponent(Component, options)
 
 ```
 
